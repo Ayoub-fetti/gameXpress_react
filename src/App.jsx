@@ -4,10 +4,11 @@ import ProtectedRoute from './components/ProtectedRoute';
 import AuthRoute from './components/AuthRoute'; 
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
+import Dashboard from './pages/admin/Dashboard';
 import Home from './pages/Home';
 import Unauthorized from './pages/Unauthorized';
 import Layout from './components/Layout';
+import Categoty from './pages/admin/Category';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
+
             
           
             <Route element={<AuthRoute />}>
@@ -31,7 +33,7 @@ function App() {
             </Route>
             
             <Route element={<ProtectedRoute roles={['super_admin']} />}>
-              <Route path="categories" element={<div>Categories Management</div>} />
+              <Route path="categories" element={<Categoty/>} />
             </Route>
             
             <Route element={<ProtectedRoute roles={['product_manager', 'super_admin']} />}>

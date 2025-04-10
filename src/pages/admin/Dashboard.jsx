@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { Box, Typography, Container, Card, CardContent, Grid, CircularProgress } from '@mui/material';
 import { Dashboard as DashboardIcon, ShoppingCart, People, BarChart } from '@mui/icons-material';
-import api from '../api/axios';
+import api from '../../api/axios';
 
 const Dashboard = () => {
 
