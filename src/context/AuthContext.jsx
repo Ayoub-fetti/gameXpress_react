@@ -15,8 +15,11 @@ export const AuthProvider = ({ children }) => {
       try {
         if (token) {
           const { data } = await api.get('/user');
-          console.log(data);
-          setUser(data);
+          console.log(data.roles);
+          setUser({
+            user: data,
+            roles: data.roles|| []
+          });
           setIsAuthenticated(true);
         }
       } catch (err) {
@@ -32,9 +35,11 @@ export const AuthProvider = ({ children }) => {
 
 
    const hasRole = (requiredRoles) => {
+    console.log('Required Roles:', requiredRoles);
+    console.log('User Roles:', user?.roles);
     if (!requiredRoles || requiredRoles.length === 0) return true;
     if (!user?.roles) return false;
-    return requiredRoles.some(role => user.roles.includes(role));
+    return user.roles.some(role => requiredRoles.includes(role));
   };
 
 
@@ -45,7 +50,9 @@ export const AuthProvider = ({ children }) => {
       
       localStorage.setItem('token', data.token);
       setToken(data.token);
-      setUser(data.user);
+      const userData = {user: data.user, roles: data.user.roles || []};
+      console.log(data);
+      setUser(userData);
       setIsAuthenticated(true);
       return { success: true };
     } catch (error) {
@@ -58,10 +65,12 @@ export const AuthProvider = ({ children }) => {
     try {
       await getCsrfCookie(); // Get CSRF cookie for Laravel Sanctum
       const { data } = await api.post('/register', credentials);
-    console.log(data);
+
+
       localStorage.setItem('token', data.token);
       setToken(data.token);
-      setUser(data.user);
+      const userData = {user: data.user, roles: data.user.roles || []};
+      setUser(userData);
       setIsAuthenticated(true);
       return { success: true };
     } catch (error) {

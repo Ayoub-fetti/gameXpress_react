@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { CircularProgress, Box } from '@mui/material';
 
 const ProtectedRoute = ({ roles  }) => {
-  const { user, isAuthenticated, loading, hasRole, hasPermission } = useAuth();
+  const { isAuthenticated, loading, hasRole } = useAuth();
 
   if (loading) {
     return (
@@ -19,7 +19,7 @@ const ProtectedRoute = ({ roles  }) => {
   }
 
   // Check roles
-  if (roles) {
+  if (roles && roles.length > 0) {
     const hasRequiredRoles = hasRole(roles);
       
        

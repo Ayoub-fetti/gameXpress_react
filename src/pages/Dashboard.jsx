@@ -7,6 +7,16 @@ const Dashboard = () => {
 
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
+
+  useEffect(() => {
+    console.log("User data in Dashboard:", {
+      user,
+      hasRequiredRoles: user?.user?.roles?.some(role => 
+        ['product_manager', 'super_admin'].includes(role.name)
+      )
+    });
+  }, [user]);
+
   useEffect(() => {
     // Simulate loading data
     const timer = setTimeout(() => {

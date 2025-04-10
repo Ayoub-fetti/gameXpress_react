@@ -3,7 +3,7 @@ import { AppBar, Toolbar, Typography, Button, Container } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
 
 const Layout = () => {
-  const { user, isAuthenticated, logout } = useAuth();
+  const {isAuthenticated, logout, hasRole } = useAuth();
 
   return (
     <>
@@ -14,7 +14,7 @@ const Layout = () => {
           </Typography>
           {isAuthenticated ? (
             <>
-              {user?.roles?.includes('admin') || user?.roles?.includes('product_manager') ? (
+              {hasRole(['super_admin', 'product_manager']) ? (
                 <Button color="inherit" component={Link} to="/dashboard">
                   Dashboard
                 </Button>
@@ -37,7 +37,6 @@ const Layout = () => {
       </AppBar>
       <Container maxWidth="lg" sx={{ mt: 4 }}>
         <Outlet />
-        
       </Container>
     </>
   );
