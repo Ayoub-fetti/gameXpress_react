@@ -2,11 +2,20 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Box, Typography, Container, Card, CardContent, Grid, CircularProgress } from '@mui/material';
 import { Dashboard as DashboardIcon, ShoppingCart, People, BarChart } from '@mui/icons-material';
+import api from '../api/axios';
 
 const Dashboard = () => {
 
   const [loading, setLoading] = useState(true);
+  const [statistics, setStatistics] = useState({
+    total_products: 0,
+    total_categories: 0,
+    total_users: 0,
+    out_of_stock_products: 0,
+    latest_products: []
+  });
   const { user } = useAuth();
+  console.log(user);
 
   useEffect(() => {
     console.log("User data in Dashboard:", {
@@ -18,14 +27,26 @@ const Dashboard = () => {
   }, [user]);
 
   useEffect(() => {
-    // Simulate loading data
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
+      const fetchStatistics = async () => {
+        setLoading(true);
+        try {
+          const { data } = await api.get('v1/admin/dashboard');
+          setStatistics({
+            total_products: data.total_products || 0,
+            total_categories: data.total_categories || 0,
+            total_users: data.total_users || 0,
+            out_of_stock_products: data.out_of_stock_products || 0,
+            latest_products: data.latest_products || []
+          });
+        } catch (error) {
+          console.error('Failed to fetch dashboard statistics:', error);
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      fetchStatistics();
+    }, []);
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
@@ -33,6 +54,14 @@ const Dashboard = () => {
       </Box>
     );
   }
+    // Format currency for revenue display
+    const formatCurrency = (amount) => {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'MAD'
+      }).format(amount);
+    };
+
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
@@ -40,7 +69,7 @@ const Dashboard = () => {
         Dashboard
       </Typography>
       <Typography variant="subtitle1" gutterBottom>
-        Welcome back, {user.user.name} {user.user.roles[0].name}
+        Welcome back, {user.user.user?.name} {user.roles[0].name}
       </Typography>
 
       <Grid container spacing={3} sx={{ mt: 2 }}>
@@ -53,7 +82,7 @@ const Dashboard = () => {
                 </Typography>
                 <ShoppingCart color="primary" />
               </Box>
-              <Typography variant="h5">0</Typography>
+              <Typography variant="h5">{statistics.total_products}</Typography>
             </CardContent>
           </Card>
         </Grid>
@@ -66,7 +95,7 @@ const Dashboard = () => {
                 </Typography>
                 <People color="primary" />
               </Box>
-              <Typography variant="h5">0</Typography>
+              <Typography variant="h5">{statistics.total_users}</Typography>
             </CardContent>
           </Card>
         </Grid>
@@ -75,11 +104,11 @@ const Dashboard = () => {
             <CardContent>
               <Box display="flex" justifyContent="space-between">
                 <Typography color="textSecondary" gutterBottom>
-                  Total Orders
+                  Total Categories
                 </Typography>
                 <BarChart color="primary" />
               </Box>
-              <Typography variant="h5">0</Typography>
+              <Typography variant="h5">{statistics.total_categories}</Typography>
             </CardContent>
           </Card>
         </Grid>
@@ -88,11 +117,11 @@ const Dashboard = () => {
             <CardContent>
               <Box display="flex" justifyContent="space-between">
                 <Typography color="textSecondary" gutterBottom>
-                  Revenue
+                  Out of Stock Products
                 </Typography>
                 <DashboardIcon color="primary" />
               </Box>
-              <Typography variant="h5">$0</Typography>
+              <Typography variant="h5">{statistics.out_of_stock_products}</Typography>
             </CardContent>
           </Card>
         </Grid>
@@ -102,10 +131,20 @@ const Dashboard = () => {
         <Card>
           <CardContent>
             <Typography variant="h6" gutterBottom>
-              Recent Activity
+              Latest Products
             </Typography>
             <Typography color="textSecondary">
-              No recent activity
+              {statistics.latest_products.length > 0 ? (
+                <ul>
+                  {statistics.latest_products.map((product) => (
+                    <li key={product.id}>
+                      {product.name} - {formatCurrency(product.price)}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <Typography>No latest products available.</Typography>
+              )}
             </Typography>
           </CardContent>
         </Card>

@@ -23,7 +23,7 @@ const Home = () => {
         </Typography>
         <Typography variant="h5" component="h2" gutterBottom>
           {isAuthenticated
-            ? `Hello, ${user.user?.name}!`
+            ? `Hello, ${user.user.user?.name}!`
             : 'Please login or register to continue'}
         </Typography>
         {!isAuthenticated && (
