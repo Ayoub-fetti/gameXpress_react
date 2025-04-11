@@ -80,44 +80,44 @@ const Login = () => {
       required={field.required}
       value={credentials[field.name]}
       onChange={handleChange}
+      sx={{
+        '& .MuiOutlinedInput-root': {
+          '&.Mui-focused fieldset': {
+            borderColor: 'indigo',
+          },
+      },
+      '& .MuiInputLabel-root.Mui-focused': {
+        color: 'indigo',
+      },
+    }}
     />
   );
 
   return (
-    <Container maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        
+    <div className="max-w-xs mx-auto">
+      <div className="mt-8 flex flex-col items-center">
+        <h1 className="text-2xl font-semibold mb-4">Sign in</h1>
+  
         {error && (
-          <Alert severity="error" sx={{ width: '100%', mt: 2 }}>
+          <div className="w-full bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
             {error}
-          </Alert>
+          </div>
         )}
-        
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+  
+        <form onSubmit={handleSubmit} className="w-full mt-1 space-y-4">
           {formFields.map(renderFormField)}
-          
-          <Button
+  
+          <button
             type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+            className="w-full bg-indigo-900 hover:bg-indigo-800 text-white py-2 rounded-md mt-3 mb-2 transition"
           >
             Sign In
-          </Button>
-        </Box>
-      </Box>
-    </Container>
+          </button>
+        </form>
+      </div>
+    </div>
   );
+  
 };
 
 export default Login;

@@ -63,94 +63,64 @@ const Dashboard = () => {
     };
 
 
-  return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Dashboard
-      </Typography>
-      <Typography variant="subtitle1" gutterBottom>
-        Welcome back, {user.user.user?.name} {user.roles[0].name}
-      </Typography>
-
-      <Grid container spacing={3} sx={{ mt: 2 }}>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card>
-            <CardContent>
-              <Box display="flex" justifyContent="space-between">
-                <Typography color="textSecondary" gutterBottom>
-                  Total Products
-                </Typography>
-                <ShoppingCart color="primary" />
-              </Box>
-              <Typography variant="h5">{statistics.total_products}</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card>
-            <CardContent>
-              <Box display="flex" justifyContent="space-between">
-                <Typography color="textSecondary" gutterBottom>
-                  Total Users
-                </Typography>
-                <People color="primary" />
-              </Box>
-              <Typography variant="h5">{statistics.total_users}</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card>
-            <CardContent>
-              <Box display="flex" justifyContent="space-between">
-                <Typography color="textSecondary" gutterBottom>
-                  Total Categories
-                </Typography>
-                <BarChart color="primary" />
-              </Box>
-              <Typography variant="h5">{statistics.total_categories}</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card>
-            <CardContent>
-              <Box display="flex" justifyContent="space-between">
-                <Typography color="textSecondary" gutterBottom>
-                  Out of Stock Products
-                </Typography>
-                <DashboardIcon color="primary" />
-              </Box>
-              <Typography variant="h5">{statistics.out_of_stock_products}</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-
-      <Box sx={{ mt: 4 }}>
-        <Card>
-          <CardContent>
-            <Typography variant="h6" gutterBottom>
-              Latest Products
-            </Typography>
-            <Typography color="textSecondary">
-              {statistics.latest_products.length > 0 ? (
-                <ul>
-                  {statistics.latest_products.map((product) => (
-                    <li key={product.id}>
-                      {product.name} - {formatCurrency(product.price)}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <Typography>No latest products available.</Typography>
-              )}
-            </Typography>
-          </CardContent>
-        </Card>
-      </Box>
-    </Container>
-  );
+    return (
+      <div className="max-w-7xl mx-auto mt-10 mb-10 px-4">
+        <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
+        <p className="text-lg text-gray-600 mb-6">
+          Welcome back, {user.user.user?.name} {user.roles[0].name}
+        </p>
+    
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-4">
+          <div className="bg-white shadow rounded-lg p-4">
+            <div className="flex justify-between items-center">
+              <p className="text-gray-500 text-sm">Total Products</p>
+              <ShoppingCart className="text-indigo-600" />
+            </div>
+            <p className="text-2xl font-semibold">{statistics.total_products}</p>
+          </div>
+    
+          <div className="bg-white shadow rounded-lg p-4">
+            <div className="flex justify-between items-center">
+              <p className="text-gray-500 text-sm">Total Users</p>
+              <People className="text-indigo-600" />
+            </div>
+            <p className="text-2xl font-semibold">{statistics.total_users}</p>
+          </div>
+    
+          <div className="bg-white shadow rounded-lg p-4">
+            <div className="flex justify-between items-center">
+              <p className="text-gray-500 text-sm">Total Categories</p>
+              <BarChart className="text-indigo-600" />
+            </div>
+            <p className="text-2xl font-semibold">{statistics.total_categories}</p>
+          </div>
+    
+          <div className="bg-white shadow rounded-lg p-4">
+            <div className="flex justify-between items-center">
+              <p className="text-gray-500 text-sm">Out of Stock Products</p>
+              <DashboardIcon className="text-indigo-600" />
+            </div>
+            <p className="text-2xl font-semibold">{statistics.out_of_stock_products}</p>
+          </div>
+        </div>
+    
+        <div className="mt-10 bg-white shadow rounded-lg p-6">
+          <h2 className="text-xl font-semibold mb-2">Latest Products</h2>
+          {statistics.latest_products.length > 0 ? (
+            <ul className="list-disc list-inside text-gray-700">
+              {statistics.latest_products.map((product) => (
+                <li key={product.id}>
+                  {product.name} - {formatCurrency(product.price)}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-500">No latest products available.</p>
+          )}
+        </div>
+      </div>
+    );
+    
 };
 
 export default Dashboard;

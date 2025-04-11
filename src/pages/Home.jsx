@@ -6,50 +6,37 @@ const Home = () => {
   const { isAuthenticated, user } = useAuth();
 
   return (
-    <Container maxWidth="lg">
-      <Box
-        sx={{
-          my: 4,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          textAlign: 'center',
-          minHeight: '60vh',
-        }}
-      >
-        <Typography variant="h3" component="h2" gutterBottom>
+    <div className="max-w-7xl mx-auto px-4">
+      <div className="flex flex-col justify-center items-center text-center min-h-[60vh] my-8">
+        <h2 className="text-3xl md:text-5xl font-bold mb-4">
           Welcome to Our E-Commerce Store Game Express
-        </Typography>
-        <Typography variant="h5" component="h2" gutterBottom>
+        </h2>
+        <h2 className="text-xl md:text-2xl text-gray-700">
           {isAuthenticated
             ? `Hello, ${user.user.user?.name}!`
             : 'Please login or register to continue'}
-        </Typography>
+        </h2>
+  
         {!isAuthenticated && (
-          <Box sx={{ mt: 3 }}>
-            <Button
-              variant="contained"
-              size="large"
-              component={Link}
+          <div className="mt-6 flex space-x-4">
+            <Link
               to="/login"
-              sx={{ mr: 2 }}
+              className="bg-indigo-600 text-white px-6 py-2 rounded-md text-lg hover:bg-indigo-700 transition"
             >
               Login
-            </Button>
-            <Button
-              variant="outlined"
-              size="large"
-              component={Link}
+            </Link>
+            <Link
               to="/register"
+              className="border border-indigo-600 text-indigo-600 px-6 py-2 rounded-md text-lg hover:bg-indigo-50 transition"
             >
               Register
-            </Button>
-          </Box>
+            </Link>
+          </div>
         )}
-      </Box>
-    </Container>
+      </div>
+    </div>
   );
+  
 };
 
 export default Home;

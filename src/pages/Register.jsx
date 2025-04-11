@@ -32,84 +32,93 @@ const Register = () => {
     }
   };
 
-  return (
-    <Container maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Typography component="h1" variant="h5">
-          Sign up
-        </Typography>
-        {error && (
-          <Alert severity="error" sx={{ width: '100%', mt: 2 }}>
-            {error}
-          </Alert>
-        )}
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
+return (
+  <div className="max-w-xs mx-auto mt-8">
+    <div className="flex flex-col items-center">
+      <h1 className="text-xl font-semibold">Sign up</h1>
+
+      {error && (
+        <div className="w-full mt-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+          {error}
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="mt-4 w-full">
+        <div className="mb-4">
+          <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+            Full Name
+          </label>
+          <input
+            type="text"
             id="name"
-            label="Full Name"
             name="name"
-            autoComplete="name"
-            autoFocus
             value={userData.name}
             onChange={handleChange}
-          />
-          <TextField
-            margin="normal"
+            autoComplete="name"
             required
-            fullWidth
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-900"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            Email Address
+          </label>
+          <input
+            type="email"
             id="email"
-            label="Email Address"
             name="email"
-            autoComplete="email"
             value={userData.email}
             onChange={handleChange}
-          />
-          <TextField
-            margin="normal"
+            autoComplete="email"
             required
-            fullWidth
-            name="password"
-            label="Password"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-900"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            Password
+          </label>
+          <input
             type="password"
             id="password"
-            autoComplete="new-password"
+            name="password"
             value={userData.password}
             onChange={handleChange}
-          />
-          <TextField
-            margin="normal"
+            autoComplete="new-password"
             required
-            fullWidth
-            name="password_confirmation"
-            label="Confirm Password"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-900"
+          />
+        </div>
+
+        <div className="mb-6">
+          <label htmlFor="password_confirmation" className="block text-sm font-medium text-gray-700">
+            Confirm Password
+          </label>
+          <input
             type="password"
             id="password_confirmation"
-            autoComplete="new-password"
+            name="password_confirmation"
             value={userData.password_confirmation}
             onChange={handleChange}
+            autoComplete="new-password"
+            required
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-900"
           />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Sign Up
-          </Button>
-        </Box>
-      </Box>
-    </Container>
-  );
+        </div>
+
+        <button
+          type="submit"
+          className="w-full bg-indigo-900 text-white py-2 px-4 rounded hover:bg-indigo-700 transition duration-200"
+        >
+          Sign Up
+        </button>
+      </form>
+    </div>
+  </div>
+);
+
 };
 
 export default Register;

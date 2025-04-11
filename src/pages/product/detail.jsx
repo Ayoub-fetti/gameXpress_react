@@ -100,7 +100,7 @@ const ProductDetail = () => {
       <Box sx={{ my: 4 }}>
         <Button 
           component={Link} 
-          to="/" 
+          to="/products" 
           startIcon={<ArrowBack />} 
           sx={{ mb: 3 }}
         >
