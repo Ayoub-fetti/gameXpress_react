@@ -9,6 +9,7 @@ import Home from './pages/Home';
 import Unauthorized from './pages/Unauthorized';
 import Layout from './components/Layout';
 import Categoty from './pages/admin/Category';
+import Product from './pages/admin/Product';
 
 function App() {
   return (
@@ -37,7 +38,7 @@ function App() {
             </Route>
             
             <Route element={<ProtectedRoute roles={['product_manager', 'super_admin']} />}>
-              <Route path="products" element={<div>Products Management</div>} />
+              <Route path="products" element={<Product/>} />
             </Route>
           </Route>
           <Route path="*" element={<div>404</div>} />
