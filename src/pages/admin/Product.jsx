@@ -5,10 +5,12 @@ import { useDropzone } from 'react-dropzone';
 import { toast } from 'react-toastify';
 import api from '../../api/axios';
 import {Container,Typography,Box,Button,Paper,Table,TableBody,TableCell,TableContainer,TableHead,TableRow,TextField,FormControl,InputLabel,Select,MenuItem,Grid,CircularProgress,IconButton,Chip} from '@mui/material';
-import { Add, Edit, Delete, CloudUpload } from '@mui/icons-material';
+import { Add, Edit, Delete, CloudUpload, Visibility } from '@mui/icons-material';
+import { Link } from 'react-router-dom';
 
 const API_URL = '/v1/admin/products';
 const CATEGORIES_URL = '/v1/admin/categories';
+const API_BASE_URL = 'http://localhost:8000';
 
 // validation with yup
 const productSchema = Yup.object().shape({
@@ -61,18 +63,15 @@ const Product = () => {
       try {
         const formData = new FormData();
         
-        // Ajouter les valeurs du formulaire au FormData
         Object.keys(values).forEach(key => {
           formData.append(key, values[key]);
         });
         
-        // Ajouter l'image principale
         if (imageFiles.length > 0) {
           formData.append('image', imageFiles[primaryImageIndex]);
         }
         
         if (isEditing) {
-          // Mise à jour d'un produit existant
           await api.post(`${API_URL}/${currentProductId}?_method=PUT`, formData, {
             headers: {
               'Content-Type': 'multipart/form-data',
@@ -166,7 +165,13 @@ const Product = () => {
       });
       
       if (product.images && product.images.length > 0) {
-        setProductImages(product.images);
+        const processedImages = product.images.map(img => ({
+          ...img,
+          image_url: img.image_url.startsWith('http') ? 
+            img.image_url : 
+            `${API_BASE_URL}${img.image_url}`
+        }));
+        setProductImages(processedImages);
       }
       
       setIsEditing(true);
@@ -190,7 +195,6 @@ const Product = () => {
     }
   };
 
-  // Gestion des thumbnails d'images
   const renderThumbnails = () => {
     const allImages = [
       ...imageFiles.map(file => ({ type: 'new', src: file.preview })),
@@ -452,7 +456,7 @@ const Product = () => {
                   <TableRow key={product.id}>
                     <TableCell>{product.id}</TableCell>
                     <TableCell>{product.name}</TableCell>
-                    <TableCell>{product.price}€</TableCell>
+                    <TableCell>{product.price}MAD</TableCell>
                     <TableCell>{product.stock}</TableCell>
                     <TableCell>
                       <Chip
@@ -462,6 +466,16 @@ const Product = () => {
                       />
                     </TableCell>
                     <TableCell>
+                      <IconButton 
+                          color="info" 
+                          component={Link}
+                          to={`/products/${product.id}`}
+                          size="small"
+                          title="Voir les détails"
+                          sx={{ mr: 1 }}
+                        >
+                        <Visibility />
+                      </IconButton>
                       <IconButton 
                         color="primary" 
                         onClick={() => handleEdit(product.id)}

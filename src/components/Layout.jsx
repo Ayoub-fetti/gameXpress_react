@@ -19,6 +19,16 @@ const Layout = () => {
                   Dashboard
                 </Button>
               ) : null}
+              {hasRole(['super_admin', 'product_manager']) ? (
+                <Button color="inherit" component={Link} to="/categories">
+                  Categories
+                </Button>
+              ) : null}
+              {hasRole(['super_admin', 'product_manager']) ? (
+                <Button color="inherit" component={Link} to="/products">
+                  Products
+                </Button>
+              ) : null}
               <Button color="inherit" onClick={logout}>
                 Logout
               </Button>
