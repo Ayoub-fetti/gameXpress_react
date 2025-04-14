@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Container, Typography, Box, Grid, Paper, Chip, Button, CircularProgress, ImageList, ImageListItem } from '@mui/material';
+import { Container, Typography, Box, Grid, Paper, Chip, Button, CircularProgress, ImageList, ImageListItem, TextField } from '@mui/material';
 import { ShoppingCart, ArrowBack } from '@mui/icons-material';
-import axios from 'axios'; // Import standard axios for public requests
-import api from '../../api/axios';
+import axios from 'axios'; 
 
 const API_BASE_URL = 'http://localhost:8000';
 
@@ -14,6 +13,7 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -53,8 +53,14 @@ const ProductDetail = () => {
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('fr-FR', {
       style: 'currency',
-      currency: 'EUR'
+      currency: 'MAD'
     }).format(amount);
+  };
+  const handleQuantityChange = (event) => {
+    const value = parseInt(event.target.value, 10);
+    if (value > 0 && value <= product.stock) {
+      setQuantity(value);
+    }
   };
 
   if (loading) {
@@ -189,11 +195,23 @@ const ProductDetail = () => {
               </Typography>
 
               <Typography variant="subtitle1" sx={{ mb: 1 }}>
-                Category:
+                Category: {category ? category.name : 'Uncategorized'}
               </Typography>
-              <Typography variant="body1" sx={{ mb: 3 }}>
-                {category ? category.name : 'Uncategorized'}
-              </Typography>
+                            {/* Add quantity input field */}
+                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <Typography variant="subtitle1" sx={{ mr: 2 }}>
+                  Quantity:
+                </Typography>
+                <TextField
+                  type="number"
+                  size="small"
+                  InputProps={{ inputProps: { min: 1, max: product.stock } }}
+                  value={quantity}
+                  onChange={handleQuantityChange}
+                  sx={{ width: '80px' }}
+                  disabled={product.status !== 'available' || product.stock === 0}
+                />
+              </Box>
 
               <Button 
                 variant="contained" 

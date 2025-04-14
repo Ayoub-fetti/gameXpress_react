@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
-import api from '../api/axios';
 import { CircularProgress } from '@mui/material';
 import axios from 'axios';
 
@@ -45,7 +44,7 @@ const Home = () => {
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('fr-FR', {
       style: 'currency',
-      currency: 'EUR'
+      currency: 'MAD'
     }).format(amount);
   };
 
