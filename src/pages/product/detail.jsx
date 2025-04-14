@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Container, Typography, Box, Grid, Paper, Chip, Button, CircularProgress, ImageList, ImageListItem } from '@mui/material';
 import { ShoppingCart, ArrowBack } from '@mui/icons-material';
+import axios from 'axios'; // Import standard axios for public requests
 import api from '../../api/axios';
 
-const API_BASE_URL = 'http://localhost:8000'; 
+const API_BASE_URL = 'http://localhost:8000';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -18,13 +19,13 @@ const ProductDetail = () => {
     const fetchProductDetails = async () => {
       setLoading(true);
       try {
-        const response = await api.get(`/v1/admin/products/${id}`);
+        // Use direct axios request without auth headers
+        const response = await axios.get(`${API_BASE_URL}/api/v1/admin/products/${id}`);
         setProduct(response.data);
         
-        // If product has category_id, fetch the category
         if (response.data.category_id) {
           try {
-            const categoryResponse = await api.get(`/v1/admin/categories/${response.data.category_id}`);
+            const categoryResponse = await axios.get(`${API_BASE_URL}/api/v1/admin/categories/${response.data.category_id}`);
             setCategory(categoryResponse.data);
           } catch (categoryErr) {
             console.error('Error fetching category:', categoryErr);
@@ -32,7 +33,6 @@ const ProductDetail = () => {
         }
         
         if (response.data.images && response.data.images.length > 0) {
-          // Convert relative path to absolute URL
           const imageUrl = response.data.images[0].image_url;
           setSelectedImage(imageUrl.startsWith('http') ? imageUrl : `${API_BASE_URL}${imageUrl}`);
         }
@@ -100,11 +100,11 @@ const ProductDetail = () => {
       <Box sx={{ my: 4 }}>
         <Button 
           component={Link} 
-          to="/products" 
+          to="/" 
           startIcon={<ArrowBack />} 
           sx={{ mb: 3 }}
         >
-          Back
+          Back to Home
         </Button>
 
         <Grid container spacing={4}>
@@ -132,6 +132,7 @@ const ProductDetail = () => {
                   mb: 2
                 }}
               />
+              
               {product.images && product.images.length > 0 && (
                 <ImageList 
                   sx={{ width: '100%', maxHeight: 100 }} 
@@ -208,7 +209,6 @@ const ProductDetail = () => {
             </Box>
           </Grid>
         </Grid>
-
       </Box>
     </Container>
   );
