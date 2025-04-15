@@ -6,7 +6,6 @@ export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
   
-  // Load cart from localStorage on initial load
   useEffect(() => {
     try {
       const storedCart = localStorage.getItem('cart');
@@ -19,12 +18,10 @@ export const CartProvider = ({ children }) => {
     }
   }, []);
   
-  // Save cart to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cartItems));
   }, [cartItems]);
-  
-  // Add item to cart
+
   const addToCart = (product, quantity = 1) => {
     setCartItems(prevItems => {
       const existingItemIndex = prevItems.findIndex(item => item.id === product.id);
@@ -55,16 +52,13 @@ export const CartProvider = ({ children }) => {
       }
     });
     
-    // Open cart sidebar when adding item
     setCartOpen(true);
   };
   
-  // Remove item from cart
   const removeFromCart = (productId) => {
     setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
   };
   
-  // Update item quantity
   const updateQuantity = (productId, quantity) => {
     setCartItems(prevItems => 
       prevItems.map(item => 
@@ -73,17 +67,14 @@ export const CartProvider = ({ children }) => {
     );
   };
   
-  // Clear cart
   const clearCart = () => {
     setCartItems([]);
   };
   
-  // Get total number of items in cart
   const getCartCount = () => {
     return cartItems.reduce((total, item) => total + item.quantity, 0);
   };
   
-  // Get cart total price
   const getCartTotal = () => {
     return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
   };
