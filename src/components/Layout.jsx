@@ -1,9 +1,15 @@
 import { Outlet, Link } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Button, Container } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Container, Badge, IconButton } from '@mui/material';
+import { ShoppingCart } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
+import PanierSidebar from './PanierSidebar';
 
 const Layout = () => {
-  const {isAuthenticated, logout, hasRole } = useAuth();
+  const { isAuthenticated, logout, hasRole } = useAuth();
+  const { toggleCart, getCartCount } = useCart();
+  const cartItemCount = getCartCount();
+  
   const capitalizeFirstLetter = (text) =>
     text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
 
@@ -62,6 +68,17 @@ const Layout = () => {
                 </Link>
               </>
             )}
+            
+            {/* Cart Icon with Badge */}
+            <IconButton 
+              onClick={toggleCart}
+              sx={{ color: 'white' }}
+              className="hover:text-gray-200 transition"
+            >
+              <Badge badgeContent={cartItemCount} color="error">
+                <ShoppingCart />
+              </Badge>
+            </IconButton>
           </nav>
         </div>
       </header>
@@ -69,9 +86,11 @@ const Layout = () => {
       <main className="max-w-7xl mx-auto px-4 mt-8">
         <Outlet />
       </main>
+      
+      {/* Cart Sidebar */}
+      <PanierSidebar />
     </>
   );
-  
 };
 
 export default Layout;

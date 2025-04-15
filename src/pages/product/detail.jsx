@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { Container, Typography, Box, Grid, Paper, Chip, Button, CircularProgress, ImageList, ImageListItem, TextField } from '@mui/material';
 import { ShoppingCart, ArrowBack } from '@mui/icons-material';
 import axios from 'axios'; 
+import { useCart } from '../../context/CartContext';
 
 const API_BASE_URL = 'http://localhost:8000';
 
@@ -14,6 +15,9 @@ const ProductDetail = () => {
   const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  
+  // Get cart functions from context
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -56,11 +60,16 @@ const ProductDetail = () => {
       currency: 'MAD'
     }).format(amount);
   };
+  
   const handleQuantityChange = (event) => {
     const value = parseInt(event.target.value, 10);
     if (value > 0 && value <= product.stock) {
       setQuantity(value);
     }
+  };
+  
+  const handleAddToCart = () => {
+    addToCart(product, quantity);
   };
 
   if (loading) {
@@ -197,8 +206,8 @@ const ProductDetail = () => {
               <Typography variant="subtitle1" sx={{ mb: 1 }}>
                 Category: {category ? category.name : 'Uncategorized'}
               </Typography>
-                            {/* Add quantity input field */}
-                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              {/* Add quantity input field */}
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <Typography variant="subtitle1" sx={{ mr: 2 }}>
                   Quantity:
                 </Typography>
@@ -221,6 +230,7 @@ const ProductDetail = () => {
                 disabled={product.status !== 'available'}
                 fullWidth
                 sx={{ mt: 2 }}
+                onClick={handleAddToCart}
               >
                 Add to Cart
               </Button>
