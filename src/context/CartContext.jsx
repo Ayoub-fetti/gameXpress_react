@@ -29,7 +29,7 @@ export const CartProvider = ({ children }) => {
 
 
   // Fetch cart from API
-  const fetchCart = async () => {
+  const fetchCart = async (newSessionId = null) => {
     setLoading(true);
     setError(null);
 
@@ -40,8 +40,8 @@ export const CartProvider = ({ children }) => {
 
       if (isAuthenticated) {
         config.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
-      } else if (sessionId) {
-        config.headers['X-Session-Id'] = sessionId;
+      } else if (newSessionId || sessionId) {
+        config.headers['X-Session-Id'] = newSessionId || sessionId;
       }
 
       const response = await axios.get(`${API_URL}/show`, config);
@@ -100,12 +100,15 @@ export const CartProvider = ({ children }) => {
       const response = await axios.post(endpoint, payload, config);
 
       // Store session ID from response if present
-      if(!isAuthenticated && response.data.session_id) {
-        localStorage.setItem('session_id', response.data.session_id);
-        setSessionId(response.data.session_id);
+      let newSessionId = null;
+      if (!isAuthenticated && response.data.session_id) {
+        newSessionId = response.data.session_id;
+        localStorage.setItem('session_id', newSessionId);
+        setSessionId(newSessionId);
       }
-      // Refresh cart after adding item
-      await fetchCart();
+
+      // Refresh cart after adding item, passing the new session ID if we have one
+      await fetchCart(newSessionId);
 
       // Open cart sidebar when adding item
       setCartOpen(true);
