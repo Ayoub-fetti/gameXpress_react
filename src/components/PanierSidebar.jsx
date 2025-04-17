@@ -1,7 +1,8 @@
-import { Box, Typography, Drawer, IconButton, List, ListItem, ListItemText, Divider, Button } from '@mui/material';
+import { Box, Typography, Drawer, IconButton, List, ListItem, ListItemText, Divider, Button, TextField } from '@mui/material';
 import { ShoppingCart, Close, Add, Remove, Delete } from '@mui/icons-material';
 import { useCart } from '../context/CartContext';
 import { Link as RouterLink } from 'react-router-dom';
+import { useState } from 'react';
 
 const PanierSidebar = () => {
   const { 
@@ -10,16 +11,33 @@ const PanierSidebar = () => {
     setCartOpen, 
     removeFromCart, 
     updateQuantity,
-    getCartTotal 
+    getCartTotal,
+    cartTotals,
+    applyPromoCode
   } = useCart();
+  
+  const [promoCode, setPromoCode] = useState('');
+  const [promoMessage, setPromoMessage] = useState(null);
 
-  // Format currency
+  const handleApplyPromoCode = async () => {
+    if (!promoCode.trim()) return;
+    
+    const result = await applyPromoCode(promoCode);
+    setPromoMessage({
+      text: result.message,
+      type: result.success ? 'success' : 'error'
+    });
+    setTimeout(() => {
+      setPromoMessage(null);
+    }, 10000);
+  };
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('fr-FR', {
       style: 'currency',
       currency: 'MAD'
     }).format(amount);
   };
+  
 
   return (
     <Drawer
@@ -105,12 +123,77 @@ const PanierSidebar = () => {
               ))}
             </List>
 
-            <Box mt={3}>
-              <Box display="flex" justifyContent="space-between" mb={1}>
-                <Typography variant="subtitle1">Subtotal:</Typography>
-                <Typography variant="subtitle1" fontWeight="bold">
-                  {formatCurrency(getCartTotal())}
+            {/* Promo Code Section */}
+            <Box mt={3} mb={2}>
+              <Typography variant="subtitle1">Promo Code</Typography>
+              <Box display="flex" mt={1}>
+                <TextField
+                  size="small"
+                  fullWidth
+                  placeholder="Enter promo code"
+                  value={promoCode}
+                  onChange={(e) => setPromoCode(e.target.value)}
+                  sx={{ mr: 1 }}
+                />
+                <Button 
+                  variant="outlined" 
+                  onClick={handleApplyPromoCode}
+                  disabled={!promoCode.trim()}
+                >
+                  Apply
+                </Button>
+              </Box>
+              {promoMessage && (
+                <Typography 
+                  color={promoMessage.type === 'success' ? 'success.main' : 'error.main'} 
+                  variant="body2" 
+                  mt={1}
+                >
+                  {promoMessage.text}
                 </Typography>
+              )}
+            </Box>
+
+            <Box mt={3}>
+              {/* Order Summary Section with Tax Information */}
+              <Typography variant="h6" sx={{ mb: 2 }}>Order Summary</Typography>
+              
+              <Box sx={{ backgroundColor: '#f5f5f5', p: 2, borderRadius: 1 }}>
+                <Box display="flex" justifyContent="space-between" mb={1}>
+                  <Typography variant="body2">Subtotal:</Typography>
+                  <Typography variant="body2" fontWeight="medium">
+                    {formatCurrency(cartTotals.subtotal || getCartTotal())}
+                  </Typography>
+                </Box>
+                
+                {cartTotals.discount > 0 && (
+                  <Box display="flex" justifyContent="space-between" mb={1}>
+                    <Typography variant="body2">Discount:</Typography>
+                    <Typography variant="body2" fontWeight="medium" color="error.main">
+                      -{formatCurrency(cartTotals.discount)}
+                    </Typography>
+                  </Box>
+                )}
+                
+                {cartTotals.tax > 0 && (
+                  <>
+                    <Box display="flex" justifyContent="space-between" mb={1}>
+                      <Typography variant="body2">Tax ({cartTotals.tax_rate}%):</Typography>
+                      <Typography variant="body2" fontWeight="medium">
+                        {formatCurrency(cartTotals.tax)}
+                      </Typography>
+                    </Box>
+                  </>
+                )}
+                
+                <Divider sx={{ my: 1 }} />
+                
+                <Box display="flex" justifyContent="space-between">
+                  <Typography variant="subtitle1" fontWeight="bold">Total:</Typography>
+                  <Typography variant="subtitle1" fontWeight="bold">
+                    {formatCurrency(cartTotals.total || getCartTotal())}
+                  </Typography>
+                </Box>
               </Box>
               
               <Button
