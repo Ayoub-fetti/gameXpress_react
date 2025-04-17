@@ -17,7 +17,7 @@ const Layout = () => {
     <>
       <header className="bg-indigo-900 shadow-md">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <h1 className="text-white text-lg font-semibold">E-Commerce</h1>
+          <h1 className="text-white text-lg font-semibold">GameXpress</h1>
           <nav className="flex items-center space-x-4">
             {isAuthenticated ? (
               <>

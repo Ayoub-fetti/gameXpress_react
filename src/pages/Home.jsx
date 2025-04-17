@@ -65,23 +65,6 @@ const Home = () => {
               ? `Hello, ${user?.user?.user?.name || 'User'}!`
               : 'Discover our latest games and accessories'}
           </p>
-          
-          {!isAuthenticated && (
-            <div className="mt-2 flex justify-center space-x-4">
-              <Link
-                to="/login"
-                className="bg-indigo-600 text-white px-6 py-2 rounded-md text-lg hover:bg-indigo-700 transition"
-              >
-                Login
-              </Link>
-              <Link
-                to="/register"
-                className="border border-indigo-600 text-indigo-600 px-6 py-2 rounded-md text-lg hover:bg-indigo-50 transition"
-              >
-                Register
-              </Link>
-            </div>
-          )}
         </div>
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
           {error}
@@ -102,23 +85,6 @@ const Home = () => {
             ? `Hello, ${user?.user?.user?.name || 'User'}!`
             : 'Discover our latest games and accessories'}
         </p>
-        
-        {!isAuthenticated && (
-          <div className="mt-2 flex justify-center space-x-4">
-            <Link
-              to="/login"
-              className="bg-indigo-600 text-white px-6 py-2 rounded-md text-lg hover:bg-indigo-700 transition"
-            >
-              Login
-            </Link>
-            <Link
-              to="/register"
-              className="border border-indigo-600 text-indigo-600 px-6 py-2 rounded-md text-lg hover:bg-indigo-50 transition"
-            >
-              Register
-            </Link>
-          </div>
-        )}
       </div>
 
       {/* Products grid */}
