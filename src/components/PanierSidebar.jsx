@@ -11,7 +11,6 @@ const PanierSidebar = () => {
     setCartOpen, 
     removeFromCart, 
     updateQuantity,
-    getCartTotal,
     cartTotals,
     applyPromoCode
   } = useCart();
@@ -162,7 +161,7 @@ const PanierSidebar = () => {
                 <Box display="flex" justifyContent="space-between" mb={1}>
                   <Typography variant="body2">Subtotal:</Typography>
                   <Typography variant="body2" fontWeight="medium">
-                    {formatCurrency(cartTotals.subtotal || getCartTotal())}
+                    {formatCurrency(cartTotals.subtotal )}
                   </Typography>
                 </Box>
                 
@@ -191,7 +190,7 @@ const PanierSidebar = () => {
                 <Box display="flex" justifyContent="space-between">
                   <Typography variant="subtitle1" fontWeight="bold">Total:</Typography>
                   <Typography variant="subtitle1" fontWeight="bold">
-                    {formatCurrency(cartTotals.total || getCartTotal())}
+                    {formatCurrency(cartTotals.total)}
                   </Typography>
                 </Box>
               </Box>

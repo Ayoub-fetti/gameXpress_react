@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
     Container,
@@ -13,7 +13,6 @@ import {
     ListItemAvatar,
     ListItemText,
     Avatar,
-    TextField,
     Alert
 } from '@mui/material';
 import {
@@ -23,35 +22,22 @@ import {
     CreditCard,
     CheckCircleOutline
 } from '@mui/icons-material';
-import { useCart } from '../context/CartContext';
+
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 
 const CheckoutPreview = () => {
-    const { cartItems, getCartTotal } = useCart();
+
     const { user } = useAuth();
     const navigate = useNavigate();
-    const [cartTotals, setCartTotals] = useState(null);
+    const {cartItems , cartTotals} = useCart();
+
 
 
 
     useEffect(() => {
-        // If cart is empty, redirect to home
-        if (cartItems.length === 0) {
-            navigate('/');
-        }
 
-        // Get cart totals from the backend
-        const fetchCartTotals = async () => {
-            try {
-                const totals = await getCartTotal();
-                setCartTotals(totals);
-            } catch (error) {
-                console.error('Error fetching cart totals:', error);
-            }
-        };
-
-        fetchCartTotals();
-    }, [cartItems, navigate, getCartTotal]);
+    }, []);
 
     // Format currency
     const formatCurrency = (amount) => {
@@ -164,24 +150,24 @@ const CheckoutPreview = () => {
                         <Box display="flex" justifyContent="space-between" mb={1}>
                             <Typography variant="body1">Subtotal</Typography>
                             <Typography variant="body1">
-                                {formatCurrency(cartTotals?.subtotal || getCartTotal())}
+                                {formatCurrency(cartTotals.subtotal)}
                             </Typography>
                         </Box>
 
-                        {cartTotals?.tax_amount && (
+                        {cartTotals.tax && (
                             <Box display="flex" justifyContent="space-between" mb={1}>
                                 <Typography variant="body1">Tax</Typography>
                                 <Typography variant="body1">
-                                    {formatCurrency(cartTotals.tax_amount)}
+                                    {formatCurrency(cartTotals.tax)}
                                 </Typography>
                             </Box>
                         )}
 
-                        {cartTotals?.discount_amount > 0 && (
+                        {cartTotals.discount > 0 && (
                             <Box display="flex" justifyContent="space-between" mb={1}>
                                 <Typography variant="body1">Discount</Typography>
                                 <Typography variant="body1" color="success.main">
-                                    -{formatCurrency(cartTotals.discount_amount)}
+                                    -{formatCurrency(cartTotals.discount)}
                                 </Typography>
                             </Box>
                         )}
@@ -189,7 +175,7 @@ const CheckoutPreview = () => {
                         <Box display="flex" justifyContent="space-between" mt={2} mb={3}>
                             <Typography variant="h6">Total</Typography>
                             <Typography variant="h6" fontWeight="bold">
-                                {formatCurrency(cartTotals?.total_amount || getCartTotal())}
+                                {formatCurrency(cartTotals.total)}
                             </Typography>
                         </Box>
 
