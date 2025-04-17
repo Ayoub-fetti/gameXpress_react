@@ -275,6 +275,87 @@ export const CartProvider = ({ children }) => {
       console.error('Error merging carts:', err);
     }
   };
+  // Add this function to your CartContext.jsx file within the CartProvider component
+
+  const applyPromoCode = async (code) => {
+    setLoading(true);
+    setError(null);
+  
+    try {
+      const config = {
+        headers: {}
+      };
+  
+      // Set authentication headers
+      if (isAuthenticated) {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('Authentication token not found');
+        }
+        config.headers['Authorization'] = `Bearer ${token}`;
+      } else if (sessionId) {
+        config.headers['X-Session-Id'] = sessionId;
+      } else {
+        // Create a new cart automatically for guest users if no session exists
+        const guestCartResponse = await axios.post(`${API_URL}/guest/create`);
+        if (guestCartResponse.data && guestCartResponse.data.session_id) {
+          const newSessionId = guestCartResponse.data.session_id;
+          localStorage.setItem('session_id', newSessionId);
+          setSessionId(newSessionId);
+          config.headers['X-Session-Id'] = newSessionId;
+        } else {
+          throw new Error('Failed to create guest cart');
+        }
+      }
+  
+      // Ensure we have a valid authentication method
+      if (!config.headers['Authorization'] && !config.headers['X-Session-Id']) {
+        throw new Error('No authentication method available');
+      }
+  
+      // Make the request
+      const response = await axios.post(`${API_URL}/promo_code`, { 
+        code 
+      }, config);
+  
+      // If successful, refresh the cart to update totals
+      await fetchCart();
+      
+      return {
+        success: true,
+        message: response.data.message || 'Promo code applied successfully',
+        discount: response.data.discount || 0
+      };
+    } catch (err) {
+      console.error('Error applying promo code:', err);
+      console.error('Error details:', {
+        status: err.response?.status,
+        headers: err.response?.headers,
+        data: err.response?.data
+      });
+      
+      // More detailed error handling
+      let errorMessage = 'Failed to apply promo code';
+      if (err.response) {
+        if (err.response.status === 401) {
+          errorMessage = 'Authentication error. Please try logging in again.';
+        } else if (err.response.data && err.response.data.message) {
+          errorMessage = err.response.data.message;
+        }
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      
+      setError(errorMessage);
+      return {
+        success: false,
+        message: errorMessage
+      };
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   return (
     <CartContext.Provider value={{
@@ -293,7 +374,8 @@ export const CartProvider = ({ children }) => {
       toggleCart,
       fetchCart,
       mergeCartsAfterLogin,
-      isAuthenticated
+      isAuthenticated,
+      applyPromoCode
     }}>
       {children}
     </CartContext.Provider>

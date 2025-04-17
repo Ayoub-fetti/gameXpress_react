@@ -1,6 +1,7 @@
-import { Box, Typography, Drawer, IconButton, List, ListItem, ListItemText, Divider, Button } from '@mui/material';
+import { Box, Typography, Drawer, IconButton, List, ListItem, ListItemText, Divider, Button, TextField } from '@mui/material';
 import { ShoppingCart, Close, Add, Remove, Delete } from '@mui/icons-material';
 import { useCart } from '../context/CartContext';
+import { useState } from 'react';
 
 const PanierSidebar = () => {
   const { 
@@ -10,8 +11,28 @@ const PanierSidebar = () => {
     removeFromCart, 
     updateQuantity,
     getCartTotal,
-    cartTotals  // Get cartTotals from context
+    cartTotals,
+    applyPromoCode  // Import the new function
   } = useCart();
+  
+  const [promoCode, setPromoCode] = useState('');
+  const [promoMessage, setPromoMessage] = useState(null);
+
+  // Handle promo code submission
+  const handleApplyPromoCode = async () => {
+    if (!promoCode.trim()) return;
+    
+    const result = await applyPromoCode(promoCode);
+    setPromoMessage({
+      text: result.message,
+      type: result.success ? 'success' : 'error'
+    });
+    
+    // Clear the message after a few seconds
+    setTimeout(() => {
+      setPromoMessage(null);
+    }, 5000);
+  };
 
   // Format currency
   const formatCurrency = (amount) => {
@@ -20,6 +41,7 @@ const PanierSidebar = () => {
       currency: 'MAD'
     }).format(amount);
   };
+  
 
   return (
     <Drawer
@@ -104,6 +126,37 @@ const PanierSidebar = () => {
                 </Box>
               ))}
             </List>
+
+            {/* Promo Code Section */}
+            <Box mt={3} mb={2}>
+              <Typography variant="subtitle1">Promo Code</Typography>
+              <Box display="flex" mt={1}>
+                <TextField
+                  size="small"
+                  fullWidth
+                  placeholder="Enter promo code"
+                  value={promoCode}
+                  onChange={(e) => setPromoCode(e.target.value)}
+                  sx={{ mr: 1 }}
+                />
+                <Button 
+                  variant="outlined" 
+                  onClick={handleApplyPromoCode}
+                  disabled={!promoCode.trim()}
+                >
+                  Apply
+                </Button>
+              </Box>
+              {promoMessage && (
+                <Typography 
+                  color={promoMessage.type === 'success' ? 'success.main' : 'error.main'} 
+                  variant="body2" 
+                  mt={1}
+                >
+                  {promoMessage.text}
+                </Typography>
+              )}
+            </Box>
 
             <Box mt={3}>
               {/* Order Summary Section with Tax Information */}
