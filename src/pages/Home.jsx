@@ -125,14 +125,8 @@ const Home = () => {
                 </p>
                 
                 <div className="mt-4 flex justify-between items-center">
-                  <Link 
-                    to={`/products/${product.id}`}
-                    className="text-indigo-600 hover:text-indigo-800 font-medium"
-                  >
-                    View Details
-                  </Link>
                   
-                  <button 
+                  <Link to = {`/products/${product.id}`}
                     className={`px-3 py-1 rounded-md text-white ${
                       product.status === 'available'
                         ? 'bg-indigo-600 hover:bg-indigo-700'
@@ -141,7 +135,7 @@ const Home = () => {
                     disabled={product.status !== 'available'}
                   >
                     Add to Cart
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>
