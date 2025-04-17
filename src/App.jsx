@@ -12,6 +12,7 @@ import Layout from './components/Layout';
 import Category from './pages/admin/Category';
 import Product from './pages/admin/Product';
 import ProductDetail from './pages/product/detail';
+import CheckoutPreview from './pages/CheckoutPreview';
 
 function App() {
   return (
@@ -31,6 +32,8 @@ function App() {
               
               {/* Product detail route - public */}
               <Route path="products/:id" element={<ProductDetail />} />
+              {/* Checkout routes */}
+              <Route path="checkout" element={<CheckoutPreview />} />
               
               {/* Protected routes */}
               <Route element={<ProtectedRoute roles={['product_manager', 'super_admin']} />}>

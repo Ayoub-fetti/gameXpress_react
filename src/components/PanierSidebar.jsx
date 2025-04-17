@@ -1,6 +1,7 @@
 import { Box, Typography, Drawer, IconButton, List, ListItem, ListItemText, Divider, Button } from '@mui/material';
 import { ShoppingCart, Close, Add, Remove, Delete } from '@mui/icons-material';
 import { useCart } from '../context/CartContext';
+import { Link as RouterLink } from 'react-router-dom';
 
 const PanierSidebar = () => {
   const { 
@@ -112,12 +113,15 @@ const PanierSidebar = () => {
                 </Typography>
               </Box>
               
-              <Button 
+              <Button
+                component={RouterLink}
+                to="/checkout"
                 variant="contained" 
                 color="primary"
                 fullWidth
                 size="large"
                 sx={{ mt: 2 }}
+                onClick={() => setCartOpen(false)}
               >
                 Checkout
               </Button>
