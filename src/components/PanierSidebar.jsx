@@ -12,13 +12,12 @@ const PanierSidebar = () => {
     updateQuantity,
     getCartTotal,
     cartTotals,
-    applyPromoCode  // Import the new function
+    applyPromoCode
   } = useCart();
   
   const [promoCode, setPromoCode] = useState('');
   const [promoMessage, setPromoMessage] = useState(null);
 
-  // Handle promo code submission
   const handleApplyPromoCode = async () => {
     if (!promoCode.trim()) return;
     
@@ -27,14 +26,10 @@ const PanierSidebar = () => {
       text: result.message,
       type: result.success ? 'success' : 'error'
     });
-    
-    // Clear the message after a few seconds
     setTimeout(() => {
       setPromoMessage(null);
-    }, 5000);
+    }, 10000);
   };
-
-  // Format currency
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('fr-FR', {
       style: 'currency',
