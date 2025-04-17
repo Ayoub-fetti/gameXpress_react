@@ -62,11 +62,11 @@ export const CartProvider = ({ children }) => {
           quantity: item.quantity,
           cartItemId: item.id,
           total_price : parseFloat(item.total_price || (item.unit_price * item.quantity)),
-          image: item.product.images && item.product.images.length > 0
-            ? (item.product.images[0].image_url.startsWith('http')
-              ? item.product.images[0].image_url
-              : `http://localhost:8000${item.product.images[0].image_url}`)
-            : '/placeholder-image.jpg'
+          image_url: item.product.images && item.product.images.length > 0
+          ? (item.product.images[0].image_url.startsWith('http')
+            ? item.product.images[0].image_url
+            : `http://localhost:8000${item.product.images[0].image_url}`)
+          : '/placeholder-image.jpg'
         }));
 
         setCartItems(formattedItems);
@@ -157,6 +157,7 @@ export const CartProvider = ({ children }) => {
       setLoading(false);
     }
   };
+
 
   // Remove item from cart
   const removeFromCart = async (productId) => {
