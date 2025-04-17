@@ -7,6 +7,14 @@ const CartContext = createContext();
 const API_URL = 'http://localhost:8000/api/cart';
 
 export const CartProvider = ({ children }) => {
+  const [cartTotals, setCartTotals] = useState({
+    subtotal : 0,
+    discount : 0,
+    price_after_discount : 0,
+    tax_rate : 0,
+    tax : 0,
+    total : 0
+  })
   const [cartItems, setCartItems] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -53,6 +61,7 @@ export const CartProvider = ({ children }) => {
           price: parseFloat(item.unit_price),
           quantity: item.quantity,
           cartItemId: item.id,
+          total_price : parseFloat(item.total_price || (item.unit_price * item.quantity)),
           image: item.product.images && item.product.images.length > 0
             ? (item.product.images[0].image_url.startsWith('http')
               ? item.product.images[0].image_url
@@ -61,6 +70,17 @@ export const CartProvider = ({ children }) => {
         }));
 
         setCartItems(formattedItems);
+        if (response.data.totals){
+          setCartTotals({
+            subtotal :parseFloat(response.data.totals.subtotal || 0),
+            discount :parseFloat(response.data.totals.discount || 0),
+            price_after_discount :parseFloat(response.data.totals.price_after_discount || 0),
+            tax_rate :parseFloat(response.data.totals.tax_rate || 0),
+            tax :parseFloat(response.data.totals.tax || 0),
+            total :parseFloat(response.data.totals.total || 0),
+
+          });
+        }
       }
     } catch (err) {
       console.error('Error fetching cart:', err);
@@ -69,6 +89,14 @@ export const CartProvider = ({ children }) => {
       // If cart not found, use empty array
       if (err.response && err.response.status === 404) {
         setCartItems([]);
+        setCartTotals({
+          subtotal: 0,
+          discount: 0,
+          price_after_discount: 0,
+          tax_rate: 0,
+          tax: 0,
+          total: 0
+        });
       }
     } finally {
       setLoading(false);
@@ -105,6 +133,16 @@ export const CartProvider = ({ children }) => {
         newSessionId = response.data.session_id;
         localStorage.setItem('session_id', newSessionId);
         setSessionId(newSessionId);
+      }
+      if (response.data.cart_totals) {
+        setCartTotals({
+          subtotal: parseFloat(response.data.cart_totals.subtotal || 0),
+          discount: parseFloat(response.data.cart_totals.discount || 0),
+          price_after_discount: parseFloat(response.data.cart_totals.price_after_discount || 0),
+          tax_rate: parseFloat(response.data.cart_totals.tax_rate || 0),
+          tax: parseFloat(response.data.cart_totals.tax || 0),
+          total: parseFloat(response.data.cart_totals.total || 0)
+        });
       }
 
       // Refresh cart after adding item, passing the new session ID if we have one
@@ -243,6 +281,7 @@ export const CartProvider = ({ children }) => {
       cartOpen,
       loading,
       error,
+      cartTotals,
       setCartOpen,
       addToCart,
       removeFromCart,

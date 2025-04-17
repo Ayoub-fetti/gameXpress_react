@@ -9,7 +9,8 @@ const PanierSidebar = () => {
     setCartOpen, 
     removeFromCart, 
     updateQuantity,
-    getCartTotal 
+    getCartTotal,
+    cartTotals  // Get cartTotals from context
   } = useCart();
 
   // Format currency
@@ -105,11 +106,45 @@ const PanierSidebar = () => {
             </List>
 
             <Box mt={3}>
-              <Box display="flex" justifyContent="space-between" mb={1}>
-                <Typography variant="subtitle1">Subtotal:</Typography>
-                <Typography variant="subtitle1" fontWeight="bold">
-                  {formatCurrency(getCartTotal())}
-                </Typography>
+              {/* Order Summary Section with Tax Information */}
+              <Typography variant="h6" sx={{ mb: 2 }}>Order Summary</Typography>
+              
+              <Box sx={{ backgroundColor: '#f5f5f5', p: 2, borderRadius: 1 }}>
+                <Box display="flex" justifyContent="space-between" mb={1}>
+                  <Typography variant="body2">Subtotal:</Typography>
+                  <Typography variant="body2" fontWeight="medium">
+                    {formatCurrency(cartTotals.subtotal || getCartTotal())}
+                  </Typography>
+                </Box>
+                
+                {cartTotals.discount > 0 && (
+                  <Box display="flex" justifyContent="space-between" mb={1}>
+                    <Typography variant="body2">Discount:</Typography>
+                    <Typography variant="body2" fontWeight="medium" color="error.main">
+                      -{formatCurrency(cartTotals.discount)}
+                    </Typography>
+                  </Box>
+                )}
+                
+                {cartTotals.tax > 0 && (
+                  <>
+                    <Box display="flex" justifyContent="space-between" mb={1}>
+                      <Typography variant="body2">Tax ({cartTotals.tax_rate}%):</Typography>
+                      <Typography variant="body2" fontWeight="medium">
+                        {formatCurrency(cartTotals.tax)}
+                      </Typography>
+                    </Box>
+                  </>
+                )}
+                
+                <Divider sx={{ my: 1 }} />
+                
+                <Box display="flex" justifyContent="space-between">
+                  <Typography variant="subtitle1" fontWeight="bold">Total:</Typography>
+                  <Typography variant="subtitle1" fontWeight="bold">
+                    {formatCurrency(cartTotals.total || getCartTotal())}
+                  </Typography>
+                </Box>
               </Box>
               
               <Button 
