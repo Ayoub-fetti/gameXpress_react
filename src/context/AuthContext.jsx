@@ -46,7 +46,11 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     try {
       await getCsrfCookie(); // Get CSRF cookie for Laravel Sanctum
-      const { data } = await api.post('/login', credentials);
+      const { data } = await api.post('/login', credentials, {
+        headers: {
+          'X-Session-Id': localStorage.getItem('session_id') || '',
+        }
+      });
       
       localStorage.setItem('token', data.token);
       setToken(data.token);

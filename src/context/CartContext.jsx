@@ -22,7 +22,7 @@ export const CartProvider = ({ children }) => {
   const [sessionId, setSessionId] = useState(() => {
     return localStorage.getItem('session_id') || null;
   });
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem('token') || false);
 
   // Check authentication status
   useEffect(() => {
@@ -31,6 +31,7 @@ export const CartProvider = ({ children }) => {
 
     // If a user logs in, we should fetch their cart to ensure it's up-to-date
     if (token) {
+      
       fetchCart();
     }
   }, []);

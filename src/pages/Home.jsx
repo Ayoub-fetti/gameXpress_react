@@ -13,11 +13,9 @@ const Home = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Fetch products when component mounts
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        // Use axios directly to make a public request without auth headers
         const response = await axios.get(`${API_BASE_URL}/api/cart/products`);
         
         if (Array.isArray(response.data)) {
@@ -40,7 +38,6 @@ const Home = () => {
     fetchProducts();
   }, []);
 
-  // Format currency
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('fr-FR', {
       style: 'currency',
